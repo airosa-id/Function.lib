@@ -1,4 +1,4 @@
-### Общая библиотека функций
+﻿### Общая библиотека функций
 ### Описание обновления версий: первая цифра - изменение/добавление функций, вторая - изменение/добавление переменных, третья - прочее
 ### Ver 5.4.0 - 2015-0330
 
@@ -67,10 +67,8 @@ function get_hash ($Filename) {
 }
 
 # Функция Записи в лог
-function Log-out ($Logname,$Text,$Debug=1) {
-	if ($Debug -le $glbDebug) {
-		Out-File -Append -FilePath ($LogPath+$(Get-Date -Format yyyy-MMdd)+"_"+$Logname) -InputObject ("$(Get-Date -DisplayHint DateTime)"+"  "+$Text)
-	}
+function Log-out ($FLogPath=$LogPath,$Logname,$Text) {
+		Out-File -Append -FilePath ($FLogPath+$(Get-Date -Format yyyy-MMdd)+"_"+$Logname) -InputObject ("$(Get-Date -DisplayHint DateTime)  $text")
 }
 
 #Функция Архивирования c помощью 7z
@@ -223,8 +221,6 @@ if (test-path variable:scriptName) {
 			$attachFolder = "D:\MailFolder\Attach\"
 			#  каталог с утилитами
 			$binFolder = "D:\_Script\Bin"
-			# Глобальная переменная отладки может быть перезаписана параметром скрипта
-			$GlbDebug = 1
 			# Хвост хранения архивов
 			$history_delete = [datetime]::Today.AddDays(-14)
 			# Каталог с логами
@@ -243,8 +239,6 @@ if (test-path variable:scriptName) {
 			$ArchivePath = "\\vivait.lan\Company\_Public\Итоги_торгов\Saldos\Archive\"
 			# Путь до шлюзов транзака
 			$GatesPath = "D:\Transaq\Gates\"
-			# Глобальная переменная отладки может быть перезаписана параметром скрипта
-			$GlbDebug = 1
 			# Хвост хранения архивов
 			$history_delete = [datetime]::Today.AddDays(-90)
 			# Имя лог файла по умолчанию
