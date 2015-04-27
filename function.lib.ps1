@@ -100,7 +100,7 @@ function Unpack ($Folder_with_Archive) {
 	$aFolder = Get-childitem $Folder_with_Archive
 	if ($aFolder -ne $null) {
 		ForEach ($aFile in $aFolder) {
-			if ($aFile.Extension.ToLower() -ne ".zip" -and $aFile.Extension.ToLower() -ne ".p7e" -and $aFile.Extension.ToLower() -ne ".p7s" -and $aFile.Extension.ToLower() -ne ".p7a") {
+			if ($aFile.Extension.ToLower() -ne ".zip" -and $aFile.Extension.ToLower() -ne ".p7e" -and $aFile.Extension.ToLower() -ne ".p7s" -and $aFile.Extension.ToLower() -ne ".p7a"-and $aFile.Extension.ToLower() -ne ".cry") {
 				Log-out -Logname $LogName -Text ("Удаляем файл: " + $aFile.Name)
 				Remove-Item $aFile.Name -Force
 			}elseif ($aFile.Extension.ToLower() -eq ".zip") {
@@ -136,6 +136,22 @@ function Decode_p7e ($Folder_with_p7e) {
 						# Тут же распаковываем архив
 						Unpack ($Folder_with_p7e)
 						# Удаляем p7e
+						Remove-Item $aFile.FullName -Force
+					}
+					default	{
+						Log-out -Logname $LogName -Text (" Ошибка расшифровки: ("+$Exit_Code+")")
+					}
+				}
+			}
+			if ($aFile.Extension.ToLower() -eq ".cry") {
+				Log-out -Logname $LogName -Text ("Расшифровываем файл: " + $aFile.Name)
+				$Exit_code = (RunProc $binFolder\xpki1utl.exe -decrypt -in $aFile.FullName -out $($aFile.DirectoryName+"\"+$($aFile.BaseName+".zip")) -silent ($LogPath+$(Get-Date -Format yyyy-MMdd)+"_Crypto_cry.log") )
+				switch ($Exit_code) {
+					0{
+						Log-out -Logname $LogName -Text " 0 – OK"
+						# Тут же распаковываем архив
+						Unpack ($Folder_with_p7e)
+						# Удаляем cry
 						Remove-Item $aFile.FullName -Force
 					}
 					default	{
