@@ -247,7 +247,7 @@ if (test-path variable:scriptName) {
 	switch ($scriptName) {
 		Mail_report.ps1 {
             #  Вывод отладочной информации в консоль
-            $Debugmsg = 0
+            $Debugconsole = 0
 			#  каталог для извлеченных файлов
 			$attachFolder = "D:\MailFolder\Attach\"
 			#  каталог с утилитами
@@ -267,7 +267,7 @@ if (test-path variable:scriptName) {
 		}
 		!TQServer_start.ps1 {
 	        #  Вывод отладочной информации в консоль
-            $Debugmsg = 0
+            $Debugconsole = 0
             # Путь до архива отстатоков и лимитов
 			$ArchivePath = "\\vivait.lan\Company\_Public\Итоги_торгов\Saldos\Archive\"
 			# Путь до шлюзов транзака
