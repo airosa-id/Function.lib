@@ -1,6 +1,14 @@
 ﻿### Общая библиотека функций
 ### Описание обновления версий: первая цифра - изменение/добавление функций, вторая - изменение/добавление переменных, третья - прочее
-### Ver 5.4.0 - 2015-0330
+### Ver 6.5.0 - 2015-0428
+
+Function Debugmsg ($text) {
+    if ($debugconsole -eq 1) {
+        write-host $text 
+        $HOST.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") | OUT-NULL
+        $HOST.UI.RawUI.Flushinputbuffer()
+    }
+}
 
 Function CheckFile ($Filename) {
 	$ShutdownTime = [datetime] "23:50:00"
@@ -101,8 +109,13 @@ function Unpack ($Folder_with_Archive) {
 	if ($aFolder -ne $null) {
 		ForEach ($aFile in $aFolder) {
 			if ($aFile.Extension.ToLower() -ne ".zip" -and $aFile.Extension.ToLower() -ne ".p7e" -and $aFile.Extension.ToLower() -ne ".p7s" -and $aFile.Extension.ToLower() -ne ".p7a"-and $aFile.Extension.ToLower() -ne ".cry") {
-				Log-out -Logname $LogName -Text ("Удаляем файл: " + $aFile.Name)
-				Remove-Item $aFile.Name -Force
+                if ($aFile.attributes -eq "Directory") {
+                    Log-out -Logname $LogName -Text ("Удаляем директорию: " + $aFile.Name)
+                    Remove-Item $aFile.Name -Force -Recurse
+                } else {
+                    Log-out -Logname $LogName -Text ("Удаляем файл: " + $aFile.Name)
+                    Remove-Item $aFile.Name -Force -Recurse
+                }
 			}elseif ($aFile.Extension.ToLower() -eq ".zip") {
 				Log-out -Logname $LogName -Text ("Распаковка: " + $aFile.Name)
 				$Exit_code = (RunProc $Env:ProgramFiles\7-Zip\7z.exe x $($aFile.FullName) -aoa $("-o"+$Folder_with_Archive))
@@ -233,6 +246,8 @@ $NTime = Get-Date -Format T
 if (test-path variable:scriptName) {
 	switch ($scriptName) {
 		Mail_report.ps1 {
+            #  Вывод отладочной информации в консоль
+            $Debugmsg = 0
 			#  каталог для извлеченных файлов
 			$attachFolder = "D:\MailFolder\Attach\"
 			#  каталог с утилитами
@@ -251,7 +266,9 @@ if (test-path variable:scriptName) {
 			$tmpFolder = "D:\MailFolder\tmp\"
 		}
 		!TQServer_start.ps1 {
-			# Путь до архива отстатоков и лимитов
+	        #  Вывод отладочной информации в консоль
+            $Debugmsg = 0
+            # Путь до архива отстатоков и лимитов
 			$ArchivePath = "\\vivait.lan\Company\_Public\Итоги_торгов\Saldos\Archive\"
 			# Путь до шлюзов транзака
 			$GatesPath = "D:\Transaq\Gates\"
