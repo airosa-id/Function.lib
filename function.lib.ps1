@@ -1,6 +1,6 @@
 ﻿### Общая библиотека функций
 ### Описание обновления версий: первая цифра - изменение/добавление функций, вторая - изменение/добавление переменных, третья - прочее
-### Ver 6.5.0 - 2015-0428
+### Ver 6.5.1 - 2015-0514
 
 Function Debugmsg ($text) {
     if ($debugconsole -eq 1) {
@@ -265,7 +265,7 @@ if (test-path variable:scriptName) {
 			#  каталог для временных файлов.
 			$tmpFolder = "D:\MailFolder\tmp\"
 		}
-		!TQServer_start.ps1 {
+		{"!TQServer_start.ps1","saldos_micex-forts.ps1" -contains $_} {
 	        #  Вывод отладочной информации в консоль
             $Debugconsole = 0
             # Путь до архива отстатоков и лимитов
